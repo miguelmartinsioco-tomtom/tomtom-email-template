@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TomTom Email Template</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f4f4;
+      --surface: #ffffff;
+      --text: #000000;
+      --text-med: #5c5c5c;
+      --text-low: #8a8a8a;
+      --border: #e5e5e5;
+      --brand: #df1b12;
+      --locked: #5c5c5c;
+      --locked-tint: rgba(92, 92, 92, 0.08);
+      --editable: #0a7d3c;
+      --editable-tint: rgba(10, 125, 60, 0.10);
+      --focus: #1a5fd6;
+      --title: 'Gilroy', 'Plus Jakarta Sans', Arial, Helvetica, sans-serif;
+      --body: 'Proxima Nova', 'Figtree', Arial, Helvetica, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #141414; --surface: #1f1f1f; --text: #f2f2f2; --text-med: #b8b8b8; --text-low: #8a8a8a;
+        --border: #333333; --locked: #a8a8a8; --locked-tint: rgba(168,168,168,0.10);
+        --editable: #3ccf7a; --editable-tint: rgba(60,207,122,0.12); --focus: #6aa0ff;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #141414; --surface: #1f1f1f; --text: #f2f2f2; --text-med: #b8b8b8; --text-low: #8a8a8a;
+      --border: #333333; --locked: #a8a8a8; --locked-tint: rgba(168,168,168,0.10);
+      --editable: #3ccf7a; --editable-tint: rgba(60,207,122,0.12); --focus: #6aa0ff;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--body); font-size: 15px; line-height: 1.5; }
+    a { color: inherit; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+    header.page { max-width: 1180px; margin: 0 auto; padding: 40px 24px 24px; }
+    .eyebrow { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-med); margin-bottom: 12px; }
+    .eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); }
+    h1 { font-family: var(--title); font-size: 32px; line-height: 40px; letter-spacing: -0.32px; margin: 0 0 8px; }
+    .lede { color: var(--text-med); max-width: 720px; margin: 0 0 20px; }
+    .links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 40px; border: 1px solid var(--border); background: var(--surface); text-decoration: none; font-family: var(--title); font-weight: 700; font-size: 13px; }
+    .pill-link.primary { background: var(--text); color: var(--surface); border-color: var(--text); }
+    .pill-link:hover { border-color: var(--text-med); }
+
+    main { max-width: 1180px; margin: 0 auto; padding: 0 24px 64px; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 32px; align-items: start; }
+
+    .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .seg { display: inline-flex; padding: 3px; border-radius: 40px; background: var(--surface); border: 1px solid var(--border); }
+    .seg button { border: 0; background: transparent; color: var(--text-med); font: 600 13px/1 var(--body); padding: 8px 14px; border-radius: 40px; cursor: pointer; }
+    .seg button[aria-pressed="true"] { background: var(--text); color: var(--surface); }
+    .toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-med); cursor: pointer; user-select: none; }
+    .toggle input { width: 16px; height: 16px; accent-color: var(--text); }
+
+    .canvas { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 32px 16px; }
+    .stage { position: relative; margin: 0 auto; width: 600px; max-width: 100%; transition: width .25s ease; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06); }
+    .stage.mobile { width: 375px; }
+    .stage iframe { display: block; width: 100%; height: 820px; border: 0; }
+    .overlays { position: absolute; inset: 0; pointer-events: none; }
+    .overlays[hidden] { display: none; }
+    .ov { position: absolute; left: 0; right: 0; border: 2px dashed var(--locked); background: var(--locked-tint); transition: background .15s, border-color .15s; }
+    .ov.editable { border-color: var(--editable); background: var(--editable-tint); border-style: solid; }
+    .ov.dim { background: transparent; border-color: transparent; }
+    /* Numbered marker straddling the left edge, clear of the 48px email padding. */
+    .ov .tag { position: absolute; top: 10px; left: -15px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--locked); color: #fff; font: 700 13px/1 var(--body); box-shadow: 0 0 0 3px var(--surface); }
+    .ov.editable .tag { background: var(--editable); color: #fff; }
+    .ov.dim .tag { opacity: 0; }
+    .fallback { margin: 12px 0 0; font-size: 13px; color: var(--text-med); }
+
+    aside h2, section.extra h2 { font-family: var(--title); font-size: 20px; line-height: 24px; margin: 0 0 12px; }
+    .cards { list-style: none; margin: 0 0 24px; padding: 0; display: grid; gap: 10px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--locked); border-radius: 10px; padding: 14px 16px; cursor: default; transition: border-color .15s, box-shadow .15s; }
+    .card.editable { border-left-color: var(--editable); }
+    .card.active { box-shadow: 0 0 0 2px var(--text-med) inset; }
+    .card .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+    .card .name { font-family: var(--title); font-weight: 700; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; }
+    .card .num { width: 22px; height: 22px; border-radius: 50%; background: var(--locked); color: #fff; font: 700 12px/22px var(--body); text-align: center; flex: none; }
+    .card.editable .num { background: var(--editable); }
+    .badge { font: 600 11px/1 var(--body); letter-spacing: .03em; text-transform: uppercase; padding: 5px 8px; border-radius: 20px; background: var(--locked-tint); color: var(--locked); white-space: nowrap; }
+    .card.editable .badge { background: var(--editable-tint); color: var(--editable); }
+    .card p { margin: 0; color: var(--text-med); font-size: 14px; }
+    .card ul { margin: 8px 0 0; padding-left: 18px; color: var(--text-med); font-size: 14px; }
+
+    .note { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .note ul { margin: 0; padding-left: 18px; color: var(--text-med); font-size: 14px; }
+    .note li + li { margin-top: 6px; }
+    .note strong { color: var(--text); }
+
+    section.extra { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; background: var(--locked-tint); padding: 1px 5px; border-radius: 4px; }
+
+    @media (max-width: 1100px) {
+      main { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 680px) {
+      header.page { padding: 24px 16px 16px; }
+      main { padding: 0 16px 48px; }
+      h1 { font-size: 26px; line-height: 32px; }
+      .canvas { padding: 16px 0; border-radius: 0; border-left: 0; border-right: 0; margin: 0 -16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page">
+    <div class="eyebrow"><span class="dot"></span>Customer email notifications · Reference</div>
+    <h1>TomTom email template</h1>
+    <p class="lede">This is the HTML version of the Figma email template. Every customer notification uses the same four sections. Teams change only the <strong>text body</strong>. The logo, support pathways and footer stay the same, so every email reads as coming from one TomTom.</p>
+    <div class="links">
+      <a class="pill-link primary" href="tomtom-email-template.html" download>Download HTML template</a>
+      <a class="pill-link" href="tomtom-email-template.html" target="_blank" rel="noopener">Open template on its own</a>
+      <a class="pill-link" href="https://www.figma.com/design/So2GOMuscJx4Y2TwBiy3Hj/TomTom---Playbook---Web---tools?node-id=27358-55660" target="_blank" rel="noopener">Figma source</a>
+      <a class="pill-link" href="https://tomtom.atlassian.net/wiki/spaces/cet/pages/2735080120/How+to+use+the+email+template" target="_blank" rel="noopener">How to use the template</a>
+    </div>
+  </header>
+
+  <main>
+    <div>
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="Preview width">
+          <button type="button" data-width="desktop" aria-pressed="true">Desktop · 600px</button>
+          <button type="button" data-width="mobile" aria-pressed="false">Mobile · 375px</button>
+        </div>
+        <label class="toggle"><input type="checkbox" id="showSections" checked> Show sections</label>
+      </div>
+      <div class="canvas">
+        <div class="stage" id="stage">
+          <!-- The script below fills this frame from template-embed.js (works when opened from disk),
+               or from tomtom-email-template.html if that copy is missing. -->
+          <iframe id="email" title="TomTom email template preview" scrolling="no"></iframe>
+          <div class="overlays" id="overlays" aria-hidden="true"></div>
+        </div>
+      </div>
+      <p class="fallback" id="fallback" hidden>Section outlines aren't available: template-embed.js is missing. Run <code>python3 build-preview.py</code> in this folder to restore them.</p>
+    </div>
+
+    <aside>
+      <h2>The four sections</h2>
+      <ol class="cards" id="cards">
+        <li class="card" data-key="logo">
+          <div class="head"><span class="name"><span class="num">1</span>TomTom logo</span><span class="badge">🔒 Locked</span></div>
+          <p>The header only says TomTom. Don't add a product or team name here.</p>
+        </li>
+        <li class="card editable" data-key="body">
+          <div class="head"><span class="name"><span class="num">2</span>Text body</span><span class="badge">✏️ Editable</span></div>
+          <p>The only part you change. Keep the styles as they are.</p>
+          <ul>
+            <li>Title: the update in a few words</li>
+            <li>Name the product in the introduction</li>
+            <li>Say what changed, what to do and by when</li>
+            <li>Links list is optional</li>
+            <li>One primary button with a clear label</li>
+          </ul>
+        </li>
+        <li class="card" data-key="support">
+          <div class="head"><span class="name"><span class="num">3</span>Support pathways</span><span class="badge">🔒 Locked</span></div>
+          <p>Points every reader to the Help Center, the one official place to ask. Don't replace it with a team mailbox. Includes the sign-off.</p>
+        </li>
+        <li class="card" data-key="footer">
+          <div class="head"><span class="name"><span class="num">4</span>Footer</span><span class="badge">🔒 Locked</span></div>
+          <p>Privacy Policy, copyright and the no-reply notice. Only fill in the year and legal entity.</p>
+        </li>
+      </ol>
+    </aside>
+
+    <section class="extra">
+      <div>
+        <h2>Before you send</h2>
+        <div class="note">
+          <ul>
+            <li>Write a <strong>subject line</strong> and a <strong>preheader</strong> (the preview line in the inbox).</li>
+            <li>Replace every <strong>[bracketed placeholder]</strong> and check every link.</li>
+            <li>Host the logo PNG on a public HTTPS address and update its <code>src</code>.</li>
+            <li>Test on <strong>mobile, dark mode, Outlook and Gmail</strong>. Check contrast.</li>
+            <li><strong>Never</strong> send passwords, API keys or other credentials by email.</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h2>Editing the HTML</h2>
+        <div class="note">
+          <ul>
+            <li>Search the file for <code>✏️ EDITABLE</code>. Change only what sits between that marker and <code>✏️ END EDITABLE</code>.</li>
+            <li>Leave everything marked <code>🔒 LOCKED</code> as it is.</li>
+            <li>The button appears twice: once for Outlook, once for other apps. Change the label and link in <strong>both</strong>.</li>
+            <li>The file uses tables and inline styles on purpose, because email apps don't support modern layout. Keep it that way.</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h2>Fonts</h2>
+        <div class="note">
+          <ul>
+            <li><strong>Titles and buttons:</strong> Gilroy, falling back to Plus Jakarta Sans.</li>
+            <li><strong>Body and captions:</strong> Proxima Nova, falling back to Figtree.</li>
+            <li>When an email app blocks web fonts (such as Outlook desktop), text shows in Arial, Helvetica, sans-serif.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Copy of tomtom-email-template.html. Regenerate with: python3 build-preview.py -->
+  <script src="template-embed.js"></script>
+  <script>
+    (function () {
+      var SECTIONS = {
+        logo:    { num: '1', label: 'Logo · Locked',             editable: false },
+        body:    { num: '2', label: 'Text body · Editable',      editable: true  },
+        support: { num: '3', label: 'Support pathways · Locked', editable: false },
+        footer:  { num: '4', label: 'Footer · Locked',           editable: false }
+      };
+      var iframe = document.getElementById('email');
+      var stage = document.getElementById('stage');
+      var overlays = document.getElementById('overlays');
+      var fallback = document.getElementById('fallback');
+      var toggle = document.getElementById('showSections');
+      var cards = document.querySelectorAll('.card');
+      var canMeasure = true;
+
+      function doc() {
+        try { return iframe.contentDocument; } catch (e) { return null; }
+      }
+
+      function layout() {
+        var d = doc();
+        if (!d || !d.body) {
+          canMeasure = false;
+          overlays.hidden = true;
+          fallback.hidden = false;
+          toggle.disabled = true;
+          toggle.parentNode.style.opacity = '0.5';
+          return;
+        }
+        // Measure the email's own height, not the iframe's current height.
+        var container = d.querySelector('.tt-container');
+        var h = container ? Math.ceil(container.getBoundingClientRect().height) : d.body.scrollHeight;
+        iframe.style.height = h + 'px';
+        overlays.innerHTML = '';
+        d.querySelectorAll('[data-section]').forEach(function (row) {
+          var key = row.getAttribute('data-section');
+          var meta = SECTIONS[key];
+          if (!meta) return;
+          var r = row.getBoundingClientRect();
+          var box = document.createElement('div');
+          box.className = 'ov' + (meta.editable ? ' editable' : '');
+          box.dataset.key = key;
+          box.style.top = r.top + 'px';
+          box.style.height = r.height + 'px';
+          var tag = document.createElement('span');
+          tag.className = 'tag';
+          tag.textContent = meta.num;
+          tag.title = meta.label;
+          box.appendChild(tag);
+          overlays.appendChild(box);
+        });
+        overlays.hidden = !toggle.checked;
+      }
+
+      function relayoutSoon() {
+        // Wait for the width transition and the email's media query to settle.
+        setTimeout(layout, 280);
+      }
+
+      iframe.addEventListener('load', function () {
+        layout();
+        var d = doc();
+        if (d && d.fonts && d.fonts.ready) d.fonts.ready.then(layout);
+      });
+      // srcdoc frames share this page's origin, so the sections can be measured even from disk.
+      if (typeof window.TEMPLATE_HTML === 'string') {
+        iframe.srcdoc = window.TEMPLATE_HTML;
+      } else {
+        iframe.src = 'tomtom-email-template.html';
+      }
+      window.addEventListener('resize', relayoutSoon);
+      stage.addEventListener('transitionend', function (e) { if (e.propertyName === 'width') layout(); });
+
+      document.querySelectorAll('.seg button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.seg button').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+          stage.classList.toggle('mobile', btn.dataset.width === 'mobile');
+          relayoutSoon();
+        });
+      });
+
+      toggle.addEventListener('change', function () {
+        if (canMeasure) overlays.hidden = !toggle.checked;
+      });
+
+      // Hovering a card spotlights its section in the preview.
+      cards.forEach(function (card) {
+        card.addEventListener('mouseenter', function () {
+          var key = card.dataset.key;
+          card.classList.add('active');
+          overlays.querySelectorAll('.ov').forEach(function (ov) { ov.classList.toggle('dim', ov.dataset.key !== key); });
+        });
+        card.addEventListener('mouseleave', function () {
+          card.classList.remove('active');
+          overlays.querySelectorAll('.ov').forEach(function (ov) { ov.classList.remove('dim'); });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

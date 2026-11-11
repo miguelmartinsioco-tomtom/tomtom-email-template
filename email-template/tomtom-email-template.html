@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<!--
+================================================================================
+  TomTom customer email notification template
+================================================================================
+  Source of truth : Figma – TomTom Playbook Web tools, frame "TomTom email template"
+                    https://www.figma.com/design/So2GOMuscJx4Y2TwBiy3Hj/TomTom---Playbook---Web---tools?node-id=27358-55660
+  How to use      : https://tomtom.atlassian.net/wiki/spaces/cet/pages/2735080120/How+to+use+the+email+template
+  Questions       : Radovan Tadic (template structure), Jo Hetherington or Miguel Sioco (adoption, exceptions)
+
+  THE TEMPLATE HAS FOUR SECTIONS
+    1. TomTom logo         LOCKED    – do not change
+    2. Text body           EDITABLE  – change the text, links and button
+    3. Support pathways    LOCKED    – do not change
+    4. Footer              LOCKED    – do not change
+
+  Look for these markers in the code:
+    <!== ✏️ EDITABLE ... ==>   you can change what is between the start and end markers
+    <!== 🔒 LOCKED ... ==>     keep as it is
+
+  RULES FOR THE TEXT BODY
+    - Name the product in the body (not in the header). The header only says TomTom.
+    - Say plainly what changed, what the reader needs to do, and by when.
+    - One primary button. Remove the bullet list if you have no extra links.
+    - Never put passwords, API keys or other credentials in an email.
+    - Replace every [bracketed placeholder]. Check that every link works.
+
+  BEFORE YOU SEND
+    - Fill in the <title> (use your subject line) and the preheader text below.
+    - Host the logo PNG on a public HTTPS URL and replace the logo src.
+    - Test on mobile, dark mode, Outlook (desktop) and Gmail. Check contrast.
+
+  This file is email-safe: single-column tables, inline styles, live text,
+  no scripts, no SVG. Keep it that way when you edit it.
+================================================================================
+-->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">
+  <!-- The template is designed for a light background. These ask email apps not to recolor it. -->
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+
+  <!-- ✏️ EDITABLE: use your email subject line here -->
+  <title>[Subject line]</title>
+
+  <!--[if mso]>
+  <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+  <style>
+    /* Outlook desktop ignores web fonts: fall back to Arial. */
+    table, td, p, a, span, li { font-family: Arial, Helvetica, sans-serif !important; }
+  </style>
+  <![endif]-->
+
+  <!-- 🔒 LOCKED: email fallback fonts (Gilroy and Proxima Nova are used when installed) -->
+  <!--[if !mso]><!-->
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400&family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet">
+  <!--<![endif]-->
+
+  <style>
+    :root { color-scheme: light; supported-color-schemes: light; }
+    body { margin: 0; padding: 0; width: 100% !important; background-color: #ffffff; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; display: block; }
+    a { color: inherit; }
+    a[x-apple-data-detectors] { color: inherit !important; text-decoration: none !important; }
+
+    /* Small screens: tighter side padding, smaller title. */
+    @media only screen and (max-width: 620px) {
+      .tt-container { width: 100% !important; }
+      .tt-pad { padding-left: 24px !important; padding-right: 24px !important; }
+      .tt-header { padding-top: 32px !important; padding-bottom: 32px !important; }
+      .tt-h1 { font-size: 28px !important; line-height: 36px !important; }
+    }
+  </style>
+</head>
+
+<body style="margin:0; padding:0; background-color:#ffffff;">
+
+  <!-- ✏️ EDITABLE: preheader – the preview line shown after the subject in the inbox (about 40–90 characters) -->
+  <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#ffffff; opacity:0;">
+    [Preheader: one sentence that adds to the subject line.]
+  </div>
+  <!-- Spacer that stops inbox previews pulling in body text after the preheader. -->
+  <div style="display:none; max-height:0; overflow:hidden; mso-hide:all;">&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;</div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;">
+    <tr>
+      <td align="center" style="padding:0;">
+
+        <!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+        <table role="presentation" class="tt-container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px; background-color:#ffffff;">
+
+          <!-- ======================================================================
+               🔒 LOCKED · SECTION 1 · TomTom logo
+               Do not change the logo, its size (125 × 24) or the spacing.
+               Do not add a product name here – name the product in the text body.
+               Replace src with the hosted URL of assets/tomtom-logo@4x.png.
+               ====================================================================== -->
+          <tr data-section="logo">
+            <td class="tt-pad tt-header" style="padding:40px 48px 40px 48px;">
+              <img src="assets/tomtom-logo@4x.png" width="125" height="24" alt="TomTom" style="display:block; width:125px; height:24px; border:0;">
+            </td>
+          </tr>
+          <!-- 🔒 END LOCKED · SECTION 1 -->
+
+          <!-- ======================================================================
+               ✏️ EDITABLE · SECTION 2 · Text body
+               Change the text, the links and the button label and URL.
+               Keep the styles (fonts, sizes, colors, spacing) as they are.
+               ====================================================================== -->
+          <tr data-section="body">
+            <td class="tt-pad" style="padding:0 48px 16px 48px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+
+                <!-- Title: the update in a few words -->
+                <tr>
+                  <td style="padding:0 0 32px 0;">
+                    <h1 class="tt-h1" style="margin:0; font-family:'Gilroy','Plus Jakarta Sans',Arial,Helvetica,sans-serif; font-weight:700; font-size:32px; line-height:40px; letter-spacing:-0.32px; color:#000000;">
+                      [Your update at a glance]
+                    </h1>
+                  </td>
+                </tr>
+
+                <!-- Greeting and introduction -->
+                <tr>
+                  <td style="padding:0 0 16px 0; font-family:'Proxima Nova','Figtree',Arial,Helvetica,sans-serif; font-size:16px; line-height:24px; color:#5c5c5c;">
+                    Hello [First name],
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 0 16px 0; font-family:'Proxima Nova','Figtree',Arial,Helvetica,sans-serif; font-size:16px; line-height:24px; color:#5c5c5c;">
+                    There&rsquo;s an update to [product name, e.g. Move]. [A short explanation of what has changed and why it matters to you.]
+                  </td>
+                </tr>
+
+                <!-- Subheading -->
+                <tr>
+                  <td style="padding:0 0 16px 0;">
+                    <h2 style="margin:0; font-family:'Gilroy','Plus Jakarta Sans',Arial,Helvetica,sans-serif; font-weight:700; font-size:20px; line-height:24px; color:#000000;">
+                      [What you need to know]
+                    </h2>
+                  </td>
+                </tr>
+
+                <!-- Key detail and optional links (remove the list if you don't need it) -->
+                <tr>
+                  <td style="padding:0 0 32px 0; font-family:'Proxima Nova','Figtree',Arial,Helvetica,sans-serif; font-size:16px; line-height:24px; color:#5c5c5c;">
+                    <p style="margin:0;">[The essential detail, relevant date or next step. Keep this paragraph focused on the information you need to take action.</p>
+                    <ul style="margin:0; padding:0 0 0 24px;">
+                      <li style="margin:0; font-size:16px; line-height:24px; color:#5c5c5c;"><a href="https://example.com/link-1" style="color:#5c5c5c; text-decoration:underline;">Link option 1</a></li>
+                      <li style="margin:0; font-size:16px; line-height:24px; color:#5c5c5c;"><a href="https://example.com/link-2" style="color:#5c5c5c; text-decoration:underline;">Link option 2</a>]</li>
+                    </ul>
+                  </td>
+                </tr>
+
+                <!-- Primary button: change the label and both href values (Outlook uses the first one) -->
+                <tr>
+                  <td style="padding:0;">
+                    <!--[if mso]>
+                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://example.com/action" style="height:44px; v-text-anchor:middle; width:120px;" arcsize="50%" stroke="f" fillcolor="#000000">
+                      <w:anchorlock/>
+                      <center style="color:#ffffff; font-family:Arial,Helvetica,sans-serif; font-size:14px; font-weight:bold;">Button</center>
+                    </v:roundrect>
+                    <![endif]-->
+                    <!--[if !mso]><!-->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td style="border-radius:40px; background-color:#000000;">
+                          <a href="https://example.com/action" style="display:inline-block; padding:12px 20px; border-radius:40px; background-color:#000000; font-family:'Gilroy','Plus Jakarta Sans',Arial,Helvetica,sans-serif; font-weight:700; font-size:14px; line-height:20px; color:#ffffff; text-decoration:none;">Button</a>
+                        </td>
+                      </tr>
+                    </table>
+                    <!--<![endif]-->
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+          <!-- ✏️ END EDITABLE · SECTION 2 -->
+
+          <!-- ======================================================================
+               🔒 LOCKED · SECTION 3 · Support pathways and sign-off
+               Every email ends by pointing to the Help Center, so customers always
+               have one official place to ask. Do not replace it with a team mailbox.
+               ====================================================================== -->
+          <tr data-section="support">
+            <td class="tt-pad" style="padding:0 48px 40px 48px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding:0 0 4px 0; font-family:'Proxima Nova','Figtree',Arial,Helvetica,sans-serif; font-size:16px; line-height:24px; color:#5c5c5c;">
+                    [If you have any questions or need for support,]
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:4px 0 36px 0; font-size:14px; line-height:20px;">
+                    <a href="https://support.tomtom.com" style="font-family:'Gilroy','Plus Jakarta Sans',Arial,Helvetica,sans-serif; font-weight:700; font-size:14px; line-height:20px; color:#000000; text-decoration:none;">Visit the Help Center</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0; font-family:'Proxima Nova','Figtree',Arial,Helvetica,sans-serif; font-size:16px; line-height:24px; color:#5c5c5c;">
+                    Thank you,<br>
+                    The TomTom team
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- 🔒 END LOCKED · SECTION 3 -->
+
+          <!-- ======================================================================
+               🔒 LOCKED · SECTION 4 · Footer
+               Only fill in [Year] and [Legal entity].
+               ====================================================================== -->
+          <tr data-section="footer">
+            <td class="tt-pad" style="padding:0 48px 32px 48px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <!-- Divider: 1px #E5E5E5 line -->
+                <tr>
+                  <td style="padding:0 0 24px 0;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr><td style="height:2px; line-height:2px; font-size:0;">&nbsp;</td></tr>
+                      <tr><td style="height:1px; line-height:1px; font-size:0; border-top:1px solid #e5e5e5;">&nbsp;</td></tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:4px 0 12px 0; font-size:12px; line-height:16px;">
+                    <a href="https://www.tomtom.com/privacy/" style="font-family:'Gilroy','Plus Jakarta Sans',Arial,Helvetica,sans-serif; font-weight:700; font-size:12px; line-height:16px; color:#000000; text-decoration:none;">Privacy Policy</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 0 8px 0; font-family:'Proxima Nova','Figtree',Arial,Helvetica,sans-serif; font-size:12px; line-height:16px; color:#959595;">
+                    &copy; [Year] [Legal entity]. All Rights Reserved.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0; font-family:'Proxima Nova','Figtree',Arial,Helvetica,sans-serif; font-size:12px; line-height:16px; color:#959595;">
+                    Please do not reply to this email.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- 🔒 END LOCKED · SECTION 4 -->
+
+        </table>
+        <!--[if mso]></td></tr></table><![endif]-->
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
