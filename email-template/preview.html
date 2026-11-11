@@ -88,6 +88,14 @@
       font-family: var(--ui-font-heading); font-weight: 700;
       font-size: 32px; line-height: 40px; letter-spacing: -1px;
       margin-bottom: 8px;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+    }
+    /* Version label (like the "Beta" pill on Docs Illustrations), in Playbook's code font */
+    .version {
+      display: inline-block; padding: 4px 8px;
+      border: 1px solid var(--ui-border-low-em); border-radius: var(--ui-radius-xl);
+      font-family: var(--ui-font-code); font-weight: 500; font-size: 12px; line-height: 16px; letter-spacing: 0.24px;
+      color: var(--ui-text-med-em);
     }
     .page-lede { max-width: 720px; color: var(--ui-text-med-em); margin-bottom: 24px; }
     .page-lede strong { color: var(--ui-text-high-em); font-weight: 600; }
@@ -307,7 +315,7 @@
   <div class="page">
 
     <header class="page-header">
-      <h1 class="page-title">TomTom email template</h1>
+      <h1 class="page-title">TomTom email template <span class="version" aria-label="version 1">v1</span></h1>
       <p class="page-lede">This is the HTML version of the Figma email template. Every customer notification uses the same four sections. Teams change only the <strong>text body</strong>. The logo, support pathways and footer stay the same, so every email reads as coming from one TomTom.</p>
       <div class="actions">
         <a class="btn btn--primary-default" href="tomtom-email-template.html" download>
