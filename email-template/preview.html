@@ -4,131 +4,329 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TomTom Email Template</title>
+  <!-- Playbook web fonts: Gilroy and Proxima Nova when installed; Nunito, Inter and Fira Code otherwise
+       (same fallbacks as the MyTomTom reseller prototype). -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
   <style>
+    /* ─── Playbook tokens (--ui-*) ─────────────────────────────────────────
+       Values from the Playbook DESIGN.md, matching the reseller prototype's token block. */
     :root {
-      --bg: #f4f4f4;
-      --surface: #ffffff;
-      --text: #000000;
-      --text-med: #5c5c5c;
-      --text-low: #8a8a8a;
-      --border: #e5e5e5;
-      --brand: #df1b12;
-      --locked: #5c5c5c;
-      --locked-tint: rgba(92, 92, 92, 0.08);
-      --editable: #0a7d3c;
-      --editable-tint: rgba(10, 125, 60, 0.10);
-      --focus: #1a5fd6;
-      --title: 'Gilroy', 'Plus Jakarta Sans', Arial, Helvetica, sans-serif;
-      --body: 'Proxima Nova', 'Figtree', Arial, Helvetica, sans-serif;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg: #141414; --surface: #1f1f1f; --text: #f2f2f2; --text-med: #b8b8b8; --text-low: #8a8a8a;
-        --border: #333333; --locked: #a8a8a8; --locked-tint: rgba(168,168,168,0.10);
-        --editable: #3ccf7a; --editable-tint: rgba(60,207,122,0.12); --focus: #6aa0ff;
-      }
-    }
-    :root[data-theme="dark"] {
-      --bg: #141414; --surface: #1f1f1f; --text: #f2f2f2; --text-med: #b8b8b8; --text-low: #8a8a8a;
-      --border: #333333; --locked: #a8a8a8; --locked-tint: rgba(168,168,168,0.10);
-      --editable: #3ccf7a; --editable-tint: rgba(60,207,122,0.12); --focus: #6aa0ff;
+      --ui-surface-0:              #FFFFFF;
+      --ui-surface-1:              #F2F2F2;
+      --ui-surface-2:              #E5E5E5;
+      --ui-surface-high-em:        #333333;
+      --ui-surface-primary:        #000000;
+      --ui-surface-info-accent:    #F5F8FA;
+      --ui-surface-success-accent: #C9ECDD;
+      --ui-surface-success:        #00A65E;
+      --ui-surface-disabled-light-em: #E5E5E5;
+      --ui-surface-disabled-med-em:   #CCCCCC;
+
+      --ui-text-high-em:           #000000;
+      --ui-text-med-em:            #5C5C5C;
+      --ui-text-low-em:            #959595;
+      --ui-text-disabled:          #B2B2B2;
+      --ui-text-white:             #FFFFFF;
+      --ui-text-primary-on-base:   #000000;
+      --ui-text-primary-on-accent-dark: #FFFFFF;
+      --ui-text-primary-on-medium-dark: rgba(255, 255, 255, 0.88);
+      --ui-text-info-on-accent-light:    #003255;
+      --ui-text-success-on-accent-light: #006A3C;
+
+      --ui-border-base-em:         #F2F2F2;
+      --ui-border-low-em:          #E5E5E5;
+      --ui-border-med-em:          #CCCCCC;
+      --ui-border-high-em:         #B2B2B2;
+      --ui-border-primary-high-em: #000000;
+      --ui-border-info-med-em:     #C9D9E4;
+      --ui-border-success-med-em:  #A0DDC3;
+      --ui-border-success-high-em: #50C190;
+
+      --ui-focus-ring: 0 0 0 4px #004B7F, inset 0 0 0 1px #FFFFFF;
+
+      --ui-elevation-e0: 0px 1px 0px 0px rgba(17,12,34,0);
+      --ui-elevation-e1: 0px 1px 2px -1px rgba(17,12,34,0.08);
+      --ui-elevation-e2: 0px 2px 4px -2px rgba(17,12,34,0.12);
+      --ui-elevation-e3: 0px 6px 16px -6px rgba(17,12,34,0.1);
+
+      --ui-radius-sm:   5px;
+      --ui-radius-md:   10px;
+      --ui-radius-lg:   20px;
+      --ui-radius-card: 24px;
+      --ui-radius-xl:   40px;
+
+      --ui-font-heading: 'Gilroy', 'Nunito', 'Segoe UI', sans-serif;
+      --ui-font-body:    'Proxima Nova', 'Inter', 'Segoe UI', sans-serif;
+      --ui-font-code:    'Fira Code', ui-monospace, monospace;
     }
 
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--body); font-size: 15px; line-height: 1.5; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
+    html, body {
+      font-family: var(--ui-font-body);
+      font-size: 16px; line-height: 24px;               /* body-m */
+      color: var(--ui-text-high-em);
+      background: var(--ui-surface-1);
+    }
     a { color: inherit; }
-    a:focus-visible, button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
+    :focus-visible { outline: none; box-shadow: var(--ui-focus-ring); }
+    svg { flex: none; }
 
-    header.page { max-width: 1180px; margin: 0 auto; padding: 40px 24px 24px; }
-    h1 { font-family: var(--title); font-size: 32px; line-height: 40px; letter-spacing: -0.32px; margin: 0 0 8px; }
-    .lede { color: var(--text-med); max-width: 720px; margin: 0 0 20px; }
-    .links { display: flex; flex-wrap: wrap; gap: 8px; }
-    .pill-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 40px; border: 1px solid var(--border); background: var(--surface); text-decoration: none; font-family: var(--title); font-weight: 700; font-size: 13px; }
-    .pill-link.primary { background: var(--text); color: var(--surface); border-color: var(--text); }
-    .pill-link:hover { border-color: var(--text-med); }
+    /* ─── Page layout ────────────────────────────────────────────────────── */
+    .page {
+      max-width: 1240px; margin: 0 auto;
+      padding: 48px 40px 96px;
+      display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 32px 40px;
+      align-items: start;
+    }
+    .page-header { grid-column: 1 / -1; }
+    .page-title {                                       /* heading-4 */
+      font-family: var(--ui-font-heading); font-weight: 700;
+      font-size: 32px; line-height: 40px; letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+    .page-lede { max-width: 720px; color: var(--ui-text-med-em); margin-bottom: 24px; }
+    .page-lede strong { color: var(--ui-text-high-em); font-weight: 600; }
+    .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+    .actions__links { display: flex; flex-wrap: wrap; gap: 4px 20px; margin-left: 8px; }
 
-    main { max-width: 1180px; margin: 0 auto; padding: 0 24px 64px; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 32px; align-items: start; }
+    .section-title {                                    /* title-1 */
+      font-family: var(--ui-font-heading); font-weight: 700;
+      font-size: 20px; line-height: 24px; margin-bottom: 16px;
+    }
 
-    .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-    .seg { display: inline-flex; padding: 3px; border-radius: 40px; background: var(--surface); border: 1px solid var(--border); }
-    .seg button { border: 0; background: transparent; color: var(--text-med); font: 600 13px/1 var(--body); padding: 8px 14px; border-radius: 40px; cursor: pointer; }
-    .seg button[aria-pressed="true"] { background: var(--text); color: var(--surface); }
-    .toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-med); cursor: pointer; user-select: none; }
-    .toggle input { width: 16px; height: 16px; accent-color: var(--text); }
+    .card {
+      background: var(--ui-surface-0);
+      border-radius: var(--ui-radius-card);
+      box-shadow: var(--ui-elevation-e1);
+    }
 
-    .canvas { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 32px 16px; }
-    .stage { position: relative; margin: 0 auto; width: 600px; max-width: 100%; transition: width .25s ease; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06); }
-    .stage.mobile { width: 375px; }
+    /* ─── Button (Playbook) ──────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      height: 44px; min-width: 140px; padding: 10px 20px;
+      border-radius: var(--ui-radius-xl);
+      font-family: var(--ui-font-heading); font-weight: 700; font-size: 14px; line-height: 20px;   /* title-3 */
+      text-decoration: none; white-space: nowrap;
+      box-shadow: var(--ui-elevation-e0);
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+    .btn svg { width: 20px; height: 20px; }
+    .btn--primary-default { background: var(--ui-surface-primary); color: var(--ui-text-primary-on-accent-dark); }
+    .btn--primary-default:hover { box-shadow: var(--ui-elevation-e3); }
+    .btn--secondary { background: var(--ui-surface-0); color: var(--ui-text-primary-on-base); border: 1px solid var(--ui-border-low-em); }
+    .btn--secondary:hover { background: var(--ui-surface-1); }
+    .btn:focus-visible { box-shadow: var(--ui-focus-ring); }
+
+    /* ─── Link button (Playbook, size small) ─────────────────────────────── */
+    .link-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 0;
+      font-family: var(--ui-font-heading); font-weight: 700; font-size: 14px; line-height: 20px;   /* title-3 */
+      color: var(--ui-text-primary-on-base); text-decoration: none;
+      border-bottom: 2px solid transparent;               /* reserves space: no layout shift on hover */
+    }
+    .link-btn svg { width: 20px; height: 20px; }
+    .link-btn:hover, .link-btn:focus-visible { border-bottom-color: var(--ui-border-primary-high-em); }
+
+    /* ─── Switcher (Playbook, size md) ───────────────────────────────────── */
+    .switcher {
+      display: inline-flex; gap: 4px; padding: 4px;
+      background: var(--ui-surface-1); border: 1px solid var(--ui-border-base-em);
+      border-radius: var(--ui-radius-xl);
+    }
+    .switcher__item {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 8px 16px; border-radius: var(--ui-radius-xl); border: 1px solid transparent;
+      font-family: var(--ui-font-heading); font-weight: 700; font-size: 14px; line-height: 20px;   /* title-3 */
+      color: var(--ui-text-med-em); white-space: nowrap;
+      transition: background 120ms ease, box-shadow 120ms ease, color 120ms ease;
+    }
+    .switcher__item:hover { color: var(--ui-text-high-em); }
+    .switcher__item[aria-selected="true"] {
+      background: var(--ui-surface-0); border-color: var(--ui-border-low-em);
+      box-shadow: var(--ui-elevation-e2); color: var(--ui-text-high-em);
+    }
+    .switcher__item:focus-visible { box-shadow: var(--ui-focus-ring); }
+    .switcher__meta { font-family: var(--ui-font-body); font-weight: 400; color: var(--ui-text-low-em); }
+    .switcher__item[aria-selected="true"] .switcher__meta { color: var(--ui-text-med-em); }
+
+    /* ─── Switch (Playbook, size md, type label) ─────────────────────────── */
+    .switch { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; cursor: pointer; }
+    .switch__track {
+      position: relative; width: 34px; height: 20px; border-radius: 100px;
+      background: var(--ui-surface-disabled-med-em); transition: background 0.15s;
+    }
+    .switch__thumb {
+      position: absolute; top: 50%; left: calc(50% - 15px); transform: translateY(-50%);
+      width: 16px; height: 16px; border-radius: 100px;
+      background: var(--ui-surface-0); box-shadow: var(--ui-elevation-e2);
+      transition: left 0.15s;
+    }
+    .switch[aria-checked="true"] .switch__track { background: var(--ui-surface-success); }
+    .switch[aria-checked="true"] .switch__thumb { left: calc(50% - 1px); }
+    .switch__label { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ui-text-high-em); }   /* body-s semibold */
+    .switch:focus-visible { box-shadow: none; }
+    .switch:focus-visible .switch__track { box-shadow: var(--ui-focus-ring); }
+    .switch[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+    .switch[aria-disabled="true"] .switch__label { color: var(--ui-text-disabled); }
+
+    /* ─── Badge (as in the reseller prototype) ───────────────────────────── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px;
+      border-radius: var(--ui-radius-sm); border: 1px solid;
+      font-family: var(--ui-font-heading); font-weight: 700; font-size: 12px; line-height: 20px;
+      white-space: nowrap;
+    }
+    .badge svg { width: 14px; height: 14px; }
+    .badge--locked   { background: var(--ui-surface-1); border-color: var(--ui-border-med-em); color: var(--ui-text-med-em); }
+    .badge--editable { background: var(--ui-surface-success-accent); border-color: var(--ui-border-success-med-em); color: var(--ui-text-success-on-accent-light); }
+
+    /* ─── Section marker (numbered, shared by preview and cards) ─────────── */
+    .marker {
+      display: inline-flex; align-items: center; justify-content: center; flex: none;
+      width: 28px; height: 28px; border-radius: 100px;
+      font-family: var(--ui-font-heading); font-weight: 700; font-size: 12px; line-height: 16px;   /* title-4 */
+      background: var(--ui-surface-high-em); color: var(--ui-text-primary-on-medium-dark);
+      border: 2px solid var(--ui-surface-high-em);
+    }
+    .marker--editable {
+      background: var(--ui-surface-success-accent); color: var(--ui-text-success-on-accent-light);
+      border-color: var(--ui-border-success-high-em);
+    }
+
+    /* ─── Preview ────────────────────────────────────────────────────────── */
+    .preview__toolbar {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: 12px 24px; margin-bottom: 16px;
+    }
+    .preview__canvas { padding: 40px 24px; }
+    .stage {
+      position: relative; margin: 0 auto; width: 600px; max-width: 100%;
+      transition: width 0.25s ease;
+      background: var(--ui-surface-0);
+      box-shadow: 0 0 0 1px var(--ui-border-low-em), var(--ui-elevation-e3);
+    }
+    .stage.is-mobile { width: 375px; }
     .stage iframe { display: block; width: 100%; height: 820px; border: 0; }
     .overlays { position: absolute; inset: 0; pointer-events: none; }
-    .overlays[hidden] { display: none; }
-    .ov { position: absolute; left: 0; right: 0; border: 2px dashed var(--locked); background: var(--locked-tint); transition: background .15s, border-color .15s; }
-    .ov.editable { border-color: var(--editable); background: var(--editable-tint); border-style: solid; }
-    .ov.dim { background: transparent; border-color: transparent; }
-    /* Numbered marker straddling the left edge, clear of the 48px email padding. */
-    .ov .tag { position: absolute; top: 10px; left: -15px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--locked); color: #fff; font: 700 13px/1 var(--body); box-shadow: 0 0 0 3px var(--surface); }
-    .ov.editable .tag { background: var(--editable); color: #fff; }
-    .ov.dim .tag { opacity: 0; }
-    .fallback { margin: 12px 0 0; font-size: 13px; color: var(--text-med); }
+    .ov {
+      position: absolute; left: 0; right: 0;
+      border: 2px dashed var(--ui-border-high-em);
+      background: color-mix(in srgb, var(--ui-surface-2) 30%, transparent);
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .ov--editable {
+      border: 2px solid var(--ui-border-success-high-em);
+      background: color-mix(in srgb, var(--ui-surface-success-accent) 20%, transparent);
+    }
+    .ov .marker { position: absolute; top: 10px; left: -15px; box-shadow: 0 0 0 3px var(--ui-surface-0); }
+    .ov.is-dim { background: transparent; border-color: transparent; }
+    .ov.is-dim .marker { opacity: 0; }
+    .ov.is-lit { border-color: var(--ui-border-primary-high-em); }
 
-    aside h2, section.extra h2 { font-family: var(--title); font-size: 20px; line-height: 24px; margin: 0 0 12px; }
-    .cards { list-style: none; margin: 0 0 24px; padding: 0; display: grid; gap: 10px; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--locked); border-radius: 10px; padding: 14px 16px; cursor: default; transition: border-color .15s, box-shadow .15s; }
-    .card.editable { border-left-color: var(--editable); }
-    .card.active { box-shadow: 0 0 0 2px var(--text-med) inset; }
-    .card .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
-    .card .name { font-family: var(--title); font-weight: 700; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; }
-    .card .num { width: 22px; height: 22px; border-radius: 50%; background: var(--locked); color: #fff; font: 700 12px/22px var(--body); text-align: center; flex: none; }
-    .card.editable .num { background: var(--editable); }
-    .badge { font: 600 11px/1 var(--body); letter-spacing: .03em; text-transform: uppercase; padding: 5px 8px; border-radius: 20px; background: var(--locked-tint); color: var(--locked); white-space: nowrap; }
-    .card.editable .badge { background: var(--editable-tint); color: var(--editable); }
-    .card p { margin: 0; color: var(--text-med); font-size: 14px; }
-    .card ul { margin: 8px 0 0; padding-left: 18px; color: var(--text-med); font-size: 14px; }
+    .banner {
+      display: flex; gap: 12px; align-items: flex-start;
+      margin-top: 16px; padding: 14px 16px;
+      border-radius: var(--ui-radius-md); border: 1px solid var(--ui-border-info-med-em);
+      background: var(--ui-surface-info-accent); color: var(--ui-text-info-on-accent-light);
+      font-size: 14px; line-height: 20px;
+    }
+    .banner svg { width: 20px; height: 20px; }
 
-    .note { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
-    .note ul { margin: 0; padding-left: 18px; color: var(--text-med); font-size: 14px; }
-    .note li + li { margin-top: 6px; }
-    .note strong { color: var(--text); }
+    /* ─── Section cards ──────────────────────────────────────────────────── */
+    .sections { list-style: none; display: grid; gap: 12px; }
+    .section-card {
+      padding: 16px 20px; border-radius: var(--ui-radius-md);
+      background: var(--ui-surface-0); border: 1px solid var(--ui-border-low-em);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .section-card.is-active { border-color: var(--ui-border-primary-high-em); box-shadow: var(--ui-elevation-e2); }
+    .section-card__head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .section-card__name {                               /* title-2 */
+      font-family: var(--ui-font-heading); font-weight: 700; font-size: 16px; line-height: 24px;
+      flex: 1; min-width: 0;
+    }
+    .section-card p, .section-card li { font-size: 14px; line-height: 20px; color: var(--ui-text-med-em); }   /* body-s */
+    .section-card ul { margin: 8px 0 0; padding-left: 18px; }
+    .section-card li + li { margin-top: 2px; }
 
-    section.extra { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; background: var(--locked-tint); padding: 1px 5px; border-radius: 4px; }
+    /* ─── Guidance ───────────────────────────────────────────────────────── */
+    .guidance { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+    .guidance .card { padding: 24px; }
+    .guidance ul { padding-left: 18px; }
+    .guidance li { font-size: 14px; line-height: 20px; color: var(--ui-text-med-em); }
+    .guidance li + li { margin-top: 8px; }
+    .guidance strong { color: var(--ui-text-high-em); font-weight: 600; }
+    code {
+      font-family: var(--ui-font-code); font-weight: 500; font-size: 12px; line-height: 20px;   /* code-s */
+      background: var(--ui-surface-1); border-radius: var(--ui-radius-sm); padding: 1px 6px;
+      color: var(--ui-text-high-em); white-space: nowrap;
+    }
 
-    @media (max-width: 1100px) {
-      main { grid-template-columns: minmax(0, 1fr); }
+    /* ─── Responsive ─────────────────────────────────────────────────────── */
+    @media (max-width: 1120px) {
+      .page { grid-template-columns: minmax(0, 1fr); }
+      .guidance { grid-template-columns: minmax(0, 1fr); }
     }
     @media (max-width: 680px) {
-      header.page { padding: 24px 16px 16px; }
-      main { padding: 0 16px 48px; }
-      h1 { font-size: 26px; line-height: 32px; }
-      .canvas { padding: 16px 16px 16px 20px; border-radius: 0; border-left: 0; border-right: 0; margin: 0 -16px; }
+      .page { padding: 32px 16px 64px; gap: 24px; }
+      .page-title { font-size: 28px; line-height: 32px; }   /* heading-5 */
+      .actions__links { margin-left: 0; }
+      .preview__canvas { padding: 24px 12px 24px 20px; border-radius: var(--ui-radius-lg); }
     }
   </style>
 </head>
 <body>
 
-  <header class="page">
-    <h1>TomTom email template</h1>
-    <p class="lede">This is the HTML version of the Figma email template. Every customer notification uses the same four sections. Teams change only the <strong>text body</strong>. The logo, support pathways and footer stay the same, so every email reads as coming from one TomTom.</p>
-    <div class="links">
-      <a class="pill-link primary" href="tomtom-email-template.html" download>Download HTML template</a>
-      <a class="pill-link" href="tomtom-email-template.html" target="_blank" rel="noopener">Open template on its own</a>
-      <a class="pill-link" href="https://www.figma.com/design/So2GOMuscJx4Y2TwBiy3Hj/TomTom---Playbook---Web---tools?node-id=27358-55660" target="_blank" rel="noopener">Figma source</a>
-      <a class="pill-link" href="https://tomtom.atlassian.net/wiki/spaces/cet/pages/2735080120/How+to+use+the+email+template" target="_blank" rel="noopener">How to use the template</a>
-    </div>
-  </header>
+  <!-- Icons (Playbook-style 24px line icons) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 5h5v5m0-5-8 8M17 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.83 2.83 0 0 0-4-4L4 16v4Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v5m0-8.5v.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  </svg>
 
-  <main>
-    <div>
-      <div class="toolbar">
-        <div class="seg" role="group" aria-label="Preview width">
-          <button type="button" data-width="desktop" aria-pressed="true">Desktop · 600px</button>
-          <button type="button" data-width="mobile" aria-pressed="false">Mobile · 375px</button>
+  <div class="page">
+
+    <header class="page-header">
+      <h1 class="page-title">TomTom email template</h1>
+      <p class="page-lede">This is the HTML version of the Figma email template. Every customer notification uses the same four sections. Teams change only the <strong>text body</strong>. The logo, support pathways and footer stay the same, so every email reads as coming from one TomTom.</p>
+      <div class="actions">
+        <a class="btn btn--primary-default" href="tomtom-email-template.html" download>
+          <svg aria-hidden="true"><use href="#i-download"/></svg>Download HTML template
+        </a>
+        <a class="btn btn--secondary" href="tomtom-email-template.html" target="_blank" rel="noopener">
+          Open template on its own<svg aria-hidden="true"><use href="#i-external"/></svg>
+        </a>
+        <div class="actions__links">
+          <a class="link-btn" href="https://www.figma.com/design/So2GOMuscJx4Y2TwBiy3Hj/TomTom---Playbook---Web---tools?node-id=27358-55660" target="_blank" rel="noopener">
+            Figma source<svg aria-hidden="true"><use href="#i-external"/></svg>
+          </a>
+          <a class="link-btn" href="https://tomtom.atlassian.net/wiki/spaces/cet/pages/2735080120/How+to+use+the+email+template" target="_blank" rel="noopener">
+            How to use the template<svg aria-hidden="true"><use href="#i-external"/></svg>
+          </a>
         </div>
-        <label class="toggle"><input type="checkbox" id="showSections" checked> Show sections</label>
       </div>
-      <div class="canvas">
+    </header>
+
+    <main>
+      <div class="preview__toolbar">
+        <div class="switcher" role="tablist" aria-label="Preview width">
+          <button type="button" class="switcher__item" role="tab" data-width="desktop" aria-selected="true" tabindex="0">Desktop <span class="switcher__meta">600px</span></button>
+          <button type="button" class="switcher__item" role="tab" data-width="mobile" aria-selected="false" tabindex="-1">Mobile <span class="switcher__meta">375px</span></button>
+        </div>
+        <button type="button" class="switch" id="showSections" role="switch" aria-checked="true">
+          <span class="switch__track"><span class="switch__thumb"></span></span>
+          <span class="switch__label">Show sections</span>
+        </button>
+      </div>
+
+      <div class="card preview__canvas">
         <div class="stage" id="stage">
           <!-- The script below fills this frame from template-embed.js (works when opened from disk),
                or from tomtom-email-template.html if that copy is missing. -->
@@ -136,18 +334,30 @@
           <div class="overlays" id="overlays" aria-hidden="true"></div>
         </div>
       </div>
-      <p class="fallback" id="fallback" hidden>Section outlines aren't available: template-embed.js is missing. Run <code>python3 build-preview.py</code> in this folder to restore them.</p>
-    </div>
 
-    <aside>
-      <h2>The four sections</h2>
-      <ol class="cards" id="cards">
-        <li class="card" data-key="logo">
-          <div class="head"><span class="name"><span class="num">1</span>TomTom logo</span><span class="badge">🔒 Locked</span></div>
+      <div class="banner" id="fallback" role="status" hidden>
+        <svg aria-hidden="true"><use href="#i-info"/></svg>
+        <span>Section outlines aren't available: template-embed.js is missing. Run <code>python3 build-preview.py</code> in this folder to restore them.</span>
+      </div>
+    </main>
+
+    <aside aria-labelledby="sections-title">
+      <h2 class="section-title" id="sections-title">The four sections</h2>
+      <ol class="sections">
+        <li class="section-card" data-key="logo" tabindex="0">
+          <div class="section-card__head">
+            <span class="marker" aria-hidden="true">1</span>
+            <span class="section-card__name">TomTom logo</span>
+            <span class="badge badge--locked"><svg aria-hidden="true"><use href="#i-lock"/></svg>Locked</span>
+          </div>
           <p>The header only says TomTom. Don't add a product or team name here.</p>
         </li>
-        <li class="card editable" data-key="body">
-          <div class="head"><span class="name"><span class="num">2</span>Text body</span><span class="badge">✏️ Editable</span></div>
+        <li class="section-card" data-key="body" tabindex="0">
+          <div class="section-card__head">
+            <span class="marker marker--editable" aria-hidden="true">2</span>
+            <span class="section-card__name">Text body</span>
+            <span class="badge badge--editable"><svg aria-hidden="true"><use href="#i-edit"/></svg>Editable</span>
+          </div>
           <p>The only part you change. Keep the styles as they are.</p>
           <ul>
             <li>Title: the update in a few words</li>
@@ -157,75 +367,79 @@
             <li>One primary button with a clear label</li>
           </ul>
         </li>
-        <li class="card" data-key="support">
-          <div class="head"><span class="name"><span class="num">3</span>Support pathways</span><span class="badge">🔒 Locked</span></div>
+        <li class="section-card" data-key="support" tabindex="0">
+          <div class="section-card__head">
+            <span class="marker" aria-hidden="true">3</span>
+            <span class="section-card__name">Support pathways</span>
+            <span class="badge badge--locked"><svg aria-hidden="true"><use href="#i-lock"/></svg>Locked</span>
+          </div>
           <p>Points every reader to the Help Center, the one official place to ask. Don't replace it with a team mailbox. Includes the sign-off.</p>
         </li>
-        <li class="card" data-key="footer">
-          <div class="head"><span class="name"><span class="num">4</span>Footer</span><span class="badge">🔒 Locked</span></div>
+        <li class="section-card" data-key="footer" tabindex="0">
+          <div class="section-card__head">
+            <span class="marker" aria-hidden="true">4</span>
+            <span class="section-card__name">Footer</span>
+            <span class="badge badge--locked"><svg aria-hidden="true"><use href="#i-lock"/></svg>Locked</span>
+          </div>
           <p>Privacy Policy, copyright and the no-reply notice. Only fill in the year and legal entity.</p>
         </li>
       </ol>
     </aside>
 
-    <section class="extra">
-      <div>
-        <h2>Before you send</h2>
-        <div class="note">
-          <ul>
-            <li>Write a <strong>subject line</strong> and a <strong>preheader</strong> (the preview line in the inbox).</li>
-            <li>Replace every <strong>[bracketed placeholder]</strong> and check every link.</li>
-            <li>Host the logo PNG on a public HTTPS address and update its <code>src</code>.</li>
-            <li>Test on <strong>mobile, dark mode, Outlook and Gmail</strong>. Check contrast.</li>
-            <li><strong>Never</strong> send passwords, API keys or other credentials by email.</li>
-          </ul>
-        </div>
+    <section class="guidance" aria-label="Guidance">
+      <div class="card">
+        <h2 class="section-title">Before you send</h2>
+        <ul>
+          <li>Write a <strong>subject line</strong> and a <strong>preheader</strong> (the preview line in the inbox).</li>
+          <li>Replace every <strong>[bracketed placeholder]</strong> and check every link.</li>
+          <li>Host the logo PNG on a public HTTPS address and update its <code>src</code>.</li>
+          <li>Test on <strong>mobile, dark mode, Outlook and Gmail</strong>. Check contrast.</li>
+          <li><strong>Never</strong> send passwords, API keys or other credentials by email.</li>
+        </ul>
       </div>
-      <div>
-        <h2>Editing the HTML</h2>
-        <div class="note">
-          <ul>
-            <li>Search the file for <code>✏️ EDITABLE</code>. Change only what sits between that marker and <code>✏️ END EDITABLE</code>.</li>
-            <li>Leave everything marked <code>🔒 LOCKED</code> as it is.</li>
-            <li>The button appears twice: once for Outlook, once for other apps. Change the label and link in <strong>both</strong>.</li>
-            <li>The file uses tables and inline styles on purpose, because email apps don't support modern layout. Keep it that way.</li>
-          </ul>
-        </div>
+      <div class="card">
+        <h2 class="section-title">Editing the HTML</h2>
+        <ul>
+          <li>Search the file for <code>✏️ EDITABLE</code>. Change only what sits between that marker and <code>✏️ END EDITABLE</code>.</li>
+          <li>Leave everything marked <code>🔒 LOCKED</code> as it is.</li>
+          <li>The button appears twice: once for Outlook, once for other apps. Change the label and link in <strong>both</strong>.</li>
+          <li>The file uses tables and inline styles on purpose, because email apps don't support modern layout. Keep it that way.</li>
+        </ul>
       </div>
-      <div>
-        <h2>Fonts</h2>
-        <div class="note">
-          <ul>
-            <li><strong>Titles and buttons:</strong> Gilroy, falling back to Plus Jakarta Sans.</li>
-            <li><strong>Body and captions:</strong> Proxima Nova, falling back to Figtree.</li>
-            <li>When an email app blocks web fonts (such as Outlook desktop), text shows in Arial, Helvetica, sans-serif.</li>
-          </ul>
-        </div>
+      <div class="card">
+        <h2 class="section-title">Fonts in the email</h2>
+        <ul>
+          <li><strong>Titles and buttons:</strong> Gilroy, falling back to Plus Jakarta Sans.</li>
+          <li><strong>Body and captions:</strong> Proxima Nova, falling back to Figtree.</li>
+          <li>When an email app blocks web fonts (such as Outlook desktop), text shows in Arial, Helvetica, sans-serif.</li>
+        </ul>
       </div>
     </section>
-  </main>
+  </div>
 
   <!-- Copy of tomtom-email-template.html. Regenerate with: python3 build-preview.py -->
   <script src="template-embed.js"></script>
   <script>
     (function () {
       var SECTIONS = {
-        logo:    { num: '1', label: 'Logo · Locked',             editable: false },
-        body:    { num: '2', label: 'Text body · Editable',      editable: true  },
-        support: { num: '3', label: 'Support pathways · Locked', editable: false },
-        footer:  { num: '4', label: 'Footer · Locked',           editable: false }
+        logo:    { num: '1', editable: false },
+        body:    { num: '2', editable: true  },
+        support: { num: '3', editable: false },
+        footer:  { num: '4', editable: false }
       };
       var iframe = document.getElementById('email');
       var stage = document.getElementById('stage');
       var overlays = document.getElementById('overlays');
       var fallback = document.getElementById('fallback');
       var toggle = document.getElementById('showSections');
-      var cards = document.querySelectorAll('.card');
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('.switcher__item'));
+      var cards = document.querySelectorAll('.section-card');
       var canMeasure = true;
 
       function doc() {
         try { return iframe.contentDocument; } catch (e) { return null; }
       }
+      function showSections() { return toggle.getAttribute('aria-checked') === 'true'; }
 
       function layout() {
         var d = doc();
@@ -233,8 +447,7 @@
           canMeasure = false;
           overlays.hidden = true;
           fallback.hidden = false;
-          toggle.disabled = true;
-          toggle.parentNode.style.opacity = '0.5';
+          toggle.setAttribute('aria-disabled', 'true');
           return;
         }
         // Measure the email's own height, not the iframe's current height.
@@ -248,18 +461,17 @@
           if (!meta) return;
           var r = row.getBoundingClientRect();
           var box = document.createElement('div');
-          box.className = 'ov' + (meta.editable ? ' editable' : '');
+          box.className = 'ov' + (meta.editable ? ' ov--editable' : '');
           box.dataset.key = key;
           box.style.top = r.top + 'px';
           box.style.height = r.height + 'px';
-          var tag = document.createElement('span');
-          tag.className = 'tag';
-          tag.textContent = meta.num;
-          tag.title = meta.label;
-          box.appendChild(tag);
+          var marker = document.createElement('span');
+          marker.className = 'marker' + (meta.editable ? ' marker--editable' : '');
+          marker.textContent = meta.num;
+          box.appendChild(marker);
           overlays.appendChild(box);
         });
-        overlays.hidden = !toggle.checked;
+        overlays.hidden = !showSections();
       }
 
       function relayoutSoon() {
@@ -281,29 +493,49 @@
       window.addEventListener('resize', relayoutSoon);
       stage.addEventListener('transitionend', function (e) { if (e.propertyName === 'width') layout(); });
 
-      document.querySelectorAll('.seg button').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          document.querySelectorAll('.seg button').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
-          stage.classList.toggle('mobile', btn.dataset.width === 'mobile');
-          relayoutSoon();
+      // Switcher: click, or arrow keys between items (Playbook switcher accessibility).
+      function selectTab(tab, focus) {
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute('aria-selected', String(on));
+          t.tabIndex = on ? 0 : -1;
+        });
+        if (focus) tab.focus();
+        stage.classList.toggle('is-mobile', tab.dataset.width === 'mobile');
+        relayoutSoon();
+      }
+      tabs.forEach(function (tab, i) {
+        tab.addEventListener('click', function () { selectTab(tab, false); });
+        tab.addEventListener('keydown', function (e) {
+          if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+          e.preventDefault();
+          var next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+          selectTab(next, true);
         });
       });
 
-      toggle.addEventListener('change', function () {
-        if (canMeasure) overlays.hidden = !toggle.checked;
+      // Switch: Space toggles (button handles Enter/Space natively).
+      toggle.addEventListener('click', function () {
+        if (!canMeasure) return;
+        var on = !showSections();
+        toggle.setAttribute('aria-checked', String(on));
+        overlays.hidden = !on;
       });
 
-      // Hovering a card spotlights its section in the preview.
+      // Hovering or focusing a section card spotlights its section in the preview.
+      function spotlight(key) {
+        overlays.querySelectorAll('.ov').forEach(function (ov) {
+          ov.classList.toggle('is-dim', !!key && ov.dataset.key !== key);
+          ov.classList.toggle('is-lit', ov.dataset.key === key);
+        });
+      }
       cards.forEach(function (card) {
-        card.addEventListener('mouseenter', function () {
-          var key = card.dataset.key;
-          card.classList.add('active');
-          overlays.querySelectorAll('.ov').forEach(function (ov) { ov.classList.toggle('dim', ov.dataset.key !== key); });
-        });
-        card.addEventListener('mouseleave', function () {
-          card.classList.remove('active');
-          overlays.querySelectorAll('.ov').forEach(function (ov) { ov.classList.remove('dim'); });
-        });
+        function on() { card.classList.add('is-active'); spotlight(card.dataset.key); }
+        function off() { card.classList.remove('is-active'); spotlight(null); }
+        card.addEventListener('mouseenter', on);
+        card.addEventListener('mouseleave', off);
+        card.addEventListener('focus', on);
+        card.addEventListener('blur', off);
       });
     })();
   </script>
